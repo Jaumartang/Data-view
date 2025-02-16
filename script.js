@@ -9,16 +9,11 @@ let maxOffsetX = 0; // Desplaçament màxim
 let MARGIN_LEFT, MARGIN_RIGHT, MARGIN_TOP, MARGIN_BOTTOM, GRAPH_WIDTH, GRAPH_HEIGHT;
 
 function setup() {
-  const canvas = createCanvas(800, 400);
+  const canvas = createCanvas(windowWidth * 0.8, windowHeight * 0.6);
   canvas.parent('canvasContainer'); // Assigna el canvas al contenidor
 
   // Defineix les constants dins de setup()
-  MARGIN_LEFT = 60; // Marge esquerre
-  MARGIN_RIGHT = 40; // Marge dret
-  MARGIN_TOP = 40; // Marge superior
-  MARGIN_BOTTOM = 60; // Marge inferior
-  GRAPH_WIDTH = width - MARGIN_LEFT - MARGIN_RIGHT; // Amplada de l'àrea de dibuix
-  GRAPH_HEIGHT = height - MARGIN_TOP - MARGIN_BOTTOM; // Alçada de l'àrea de dibuix
+  updateMargins();
 
   // Configura el file input
   document.getElementById('fileInput').addEventListener('change', handleFile);
@@ -77,6 +72,21 @@ function draw() {
   drawLine(filteredData, 5, 'Throttle', showThrottle, color(0, 0, 255));
   drawLine(filteredData, 6, 'Pump', showPump, color(255, 0, 255));
   drawLine(filteredData, 2, 'Voltatge de bateria', showAux, color(255, 165, 0));
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth * 0.8, windowHeight * 0.6);
+  updateMargins();
+  updateScrollBar();
+}
+
+function updateMargins() {
+  MARGIN_LEFT = width * 0.1; // Marge esquerre
+  MARGIN_RIGHT = width * 0.05; // Marge dret
+  MARGIN_TOP = height * 0.1; // Marge superior
+  MARGIN_BOTTOM = height * 0.1; // Marge inferior
+  GRAPH_WIDTH = width - MARGIN_LEFT - MARGIN_RIGHT; // Amplada de l'àrea de dibuix
+  GRAPH_HEIGHT = height - MARGIN_TOP - MARGIN_BOTTOM; // Alçada de l'àrea de dibuix
 }
 
 function handleFile(e) {
