@@ -1,205 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-
+  <link rel="icon" type="image/png" href="favicon.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Data Visualizer for Xicoy Turbines</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
   <style>
-    /* General styles */
     body {
       font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1e1e2f, #2a2a40); /* Fons fosc amb gradient */
-      color: #ffffff; /* Text blanc */
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      color: #ffffff;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
+      text-align: center;
     }
 
     h1 {
-      font-size: 2.5rem;
-      margin: 20px 0;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin: 20px 10px;
       color: #ffffff;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-      text-align: center; /* Centra el títol */
     }
 
-    h1 span {
-      color: #8E44AD; /* Magenta albergínia per a "Xicoy Turbines" */
-      font-weight: bold;
-    }
-
-    /* Main container */
     .container {
-      width: 90%;
+      width: 95%;
       max-width: 1200px;
-      background: rgba(255, 255, 255, 0.1); /* Fons semi-transparent */
-      padding: 20px; /* Padding més petit */
+      background: rgba(255, 255, 255, 0.1);
+      padding: 16px;
       border-radius: 15px;
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px); /* Efecte de desenfocament */
+      backdrop-filter: blur(10px);
     }
 
-    /* Canvas */
     #canvasContainer {
       display: flex;
       justify-content: center;
-      margin: 16px 0; /* Marges superiors més petits */
+      margin: 16px 0;
     }
 
-    canvas {
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Controls */
-    .controls {
+    .controls, .file-cycle-container, #legend {
       display: flex;
-      justify-content: center; /* Centra els botons horitzontalment */
-      gap: 6px; /* Espai més petit entre botons */
-      margin: 8px 0; /* Marges superiors més petits */
-      flex-wrap: nowrap; /* Evita que els botons es desplacen a una nova línia */
-      overflow-x: auto; /* Permet desplaçament horitzontal si no hi ha prou espai */
-      padding: 8px 0; /* Padding més petit */
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0;
     }
 
     .controls button {
-      background: rgba(142, 68, 173, 0.8); /* Magenta albergínia semi-transparent */
+      background: rgba(142, 68, 173, 0.8);
       color: white;
       border: none;
-      padding: 6px 12px; /* Padding més petit */
-      border-radius: 16px; /* Vores més arrodonides */
+      padding: 8px 12px;
+      border-radius: 16px;
       cursor: pointer;
-      font-size: 0.8rem; /* Mida de la font més petita */
-      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      white-space: nowrap; /* Evita que el text es divideixi en dues línies */
-      height: 30px; /* Alçada fixa per als botons */
+      font-size: 0.9rem;
+      transition: 0.2s;
+      white-space: nowrap;
     }
 
     .controls button:hover {
-      background: rgba(142, 68, 173, 1); /* Magenta albergínia més intens */
+      background: rgba(142, 68, 173, 1);
       transform: translateY(-2px);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
-    /* Slider */
     .slider-container {
       width: 100%;
       max-width: 800px;
-      margin: 16px auto; /* Marges superiors més petits */
-      color: #ffffff; /* Text blanc */
+      margin: 10px auto;
     }
 
     .slider {
       width: 100%;
-      cursor: pointer;
       appearance: none;
-      height: 6px; /* Barra més prima */
+      height: 6px;
       background: rgba(255, 255, 255, 0.2);
       border-radius: 5px;
-      outline: none;
-      opacity: 0.7;
-      transition: opacity 0.2s ease;
-    }
-
-    .slider:hover {
-      opacity: 1;
-    }
-
-    .slider::-webkit-slider-thumb {
-      appearance: none;
-      width: 16px; /* Polsador més petit */
-      height: 16px; /* Polsador més petit */
-      background: #8E44AD; /* Magenta albergínia */
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    /* Legend */
-    #legend {
-      display: flex;
-      justify-content: center; /* Centra horitzontalment */
-      align-items: center; /* Centra verticalment */
-      gap: 8px; /* Espai més petit entre elements */
-      margin-top: 8px; /* Marges superiors més petits */
-      padding: 6px; /* Padding més petit */
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 10px;
-      width: 100%;
-      max-width: 800px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    }
-
-    #legend h3 {
-      margin: 0;
-      font-size: 0.9rem; /* Mida de la font més petita */
-      color: #ffffff;
     }
 
     #legend div {
       display: flex;
       align-items: center;
-      gap: 4px; /* Espai més petit entre el cercle i el text */
+      gap: 4px;
     }
 
-    #legend div span {
+    #legend span {
       display: inline-block;
-      width: 10px; /* Cercle més petit */
-      height: 10px; /* Cercle més petit */
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    /* File input and cycle selector */
-    .file-cycle-container {
-      display: flex;
-      justify-content: center;
-      gap: 6px; /* Espai més petit entre elements */
-      margin: 8px 0; /* Marges superiors més petits */
-    }
-
-    .file-cycle-container input[type="file"],
+    .file-cycle-container input,
     .file-cycle-container select {
-      padding: 4px 8px; /* Padding més petit */
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 16px; /* Vores més arrodonides */
-      font-size: 0.8rem; /* Mida de la font més petita */
+      padding: 6px 8px;
+      border-radius: 16px;
+      font-size: 0.9rem;
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      transition: box-shadow 0.2s ease;
-      height: 30px; /* Alçada fixa per als selectors */
     }
 
-    .file-cycle-container input[type="file"]:hover,
-    .file-cycle-container select:hover {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-
-    .file-cycle-container input[type="file"]::file-selector-button {
-      background: #8E44AD; /* Magenta albergínia */
+    .file-cycle-container input::file-selector-button {
+      background: #8E44AD;
       color: white;
       border: none;
-      padding: 4px 8px; /* Padding més petit */
-      border-radius: 16px; /* Vores més arrodonides */
+      padding: 6px 10px;
+      border-radius: 16px;
       cursor: pointer;
-      font-size: 0.8rem; /* Mida de la font més petita */
-      transition: background 0.2s ease;
-      height: 24px; /* Alçada fixa per al botó de selecció de fitxer */
     }
 
-    .file-cycle-container input[type="file"]::file-selector-button:hover {
-      background: #7D3C98; /* Magenta albergínia més fosc */
+    @media (max-width: 768px) {
+      .controls button {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+      }
+
+      .file-cycle-container {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .file-cycle-container input,
+      .file-cycle-container select {
+        width: 90%;
+      }
     }
   </style>
 </head>
@@ -207,13 +136,11 @@
   <div class="container">
     <h1>Data Visualizer for <span>Xicoy Turbines</span></h1>
 
-    <!-- File input and cycle selector -->
     <div class="file-cycle-container">
       <input type="file" id="fileInput" accept=".txt">
       <select id="cycleSelect"></select>
     </div>
 
-    <!-- Controls -->
     <div class="controls">
       <button id="toggleRPM">Show/Hide RPM</button>
       <button id="toggleTemp">Show/Hide Temperature</button>
@@ -222,16 +149,13 @@
       <button id="toggleAux">Show/Hide Battery Voltage</button>
     </div>
 
-    <!-- Canvas -->
     <div id="canvasContainer"></div>
 
-    <!-- Slider -->
     <div class="slider-container">
       <label for="scrollBar">Scroll:</label>
       <input type="range" id="scrollBar" min="0" max="100" value="0" class="slider">
     </div>
 
-    <!-- Legend -->
     <div id="legend">
       <h3>Legend</h3>
       <div><span style="background-color: #ff4d4d;"></span>RPM</div>
@@ -245,3 +169,4 @@
   <script src="script.js"></script>
 </body>
 </html>
+
