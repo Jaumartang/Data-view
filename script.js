@@ -225,7 +225,6 @@ function drawLegend() {
 
   legend.innerHTML = legendContent;
 }
-
 function drawAxes() {
   // Dibuixa l'eix X
   stroke(0);
@@ -238,6 +237,29 @@ function drawAxes() {
   textSize(12);
   textAlign(CENTER, CENTER);
   text("Time (seconds)", width / 2, height - MARGIN_BOTTOM + 50);
+
+  // Text en vertical per a RPM (eix esquerre)
+  push();
+  translate(MARGIN_LEFT - 60, height / 2); // Allunyem el text 60 píxels
+  rotate(-HALF_PI); // Gira el text 90 graus
+  textAlign(CENTER, CENTER);
+  textSize(12);
+  text("RPM", 0, 0);
+  pop();
+
+  // Text en vertical per a la resta de variables (eix dret)
+  const rightText = "Temp, Throttle, Pump, Voltage";
+  const textWidthRight = textWidth(rightText); // Calcula l'amplada del text
+  push();
+  translate(width - MARGIN_RIGHT + 60 + textWidthRight / 2, height / 2); // Ajusta la posició
+  rotate(-HALF_PI); // Gira el text 90 graus
+  textAlign(CENTER, CENTER);
+  textSize(12);
+  text(rightText, 0, 0);
+  pop();
+
+  // Depuració: Verifica la posició del text
+  console.log("Posició del text dret:", width - MARGIN_RIGHT + 200 + textWidthRight / 2);
 
   // Marcadors de l'eix X (es mouen amb el desplaçament)
   const startTime = Math.floor(offsetX / 10); // Temps inicial en segons
@@ -263,7 +285,7 @@ function drawAxes() {
   // Dibuixa l'eix Y amb dues escales
   if (data.length === 0) return;
 
-  // Escala per a RPM
+  // Escala per a RPM (eix esquerre)
   const rpmValues = getMinMaxValues(data, 4);
   const yTicks = 5; // Nombre de marques a l'eix Y
   for (let i = 0; i <= yTicks; i++) {
@@ -275,7 +297,7 @@ function drawAxes() {
     }
   }
 
-  // Escala per a la resta de variables (Temperatura, Throttle, Pump, Voltatge de bateria)
+  // Escala per a la resta de variables (eix dret)
   const otherValues = [
     getMinMaxValues(data, 3), // Temperatura
     getMinMaxValues(data, 5), // Throttle
