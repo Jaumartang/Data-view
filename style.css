@@ -1,0 +1,35 @@
+/* Legend */
+#legend {
+  display: flex;
+  justify-content: center; /* Centra horitzontalment */
+  align-items: center; /* Centra verticalment */
+  gap: 12px; /* Espai entre elements */
+  margin-top: 10px; /* Marges superiors més petits */
+  padding: 8px; /* Padding més petit */
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#legend h3 {
+  margin: 0;
+  font-size: 1rem; /* Mida de la font més petita */
+  color: #ffffff;
+}
+
+#legend div {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Espai més petit entre el cercle i el text */
+}
+
+#legend div span {
+  display: inline-block;
+  width: 12px; /* Cercle més petit */
+  height: 12px; /* Cercle més petit */
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
